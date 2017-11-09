@@ -1,0 +1,19 @@
+# Windows:
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Mac:
+.DS_Store
+.localized
+
+# Python:
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build
+
+# My configurations:
+test_output/

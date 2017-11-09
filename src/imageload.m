@@ -1,6 +1,6 @@
 clear all;
 simkai=imread('yisanshu.png');
-[fid,message]=fopen('yisanshu.txt', 'r');
+%[fid,message]=fopen('yisanshu.txt', 'r');
 graykai=rgb2gray(simkai);
 for i=1:size(graykai,1)
     if mod(i,80)==0
