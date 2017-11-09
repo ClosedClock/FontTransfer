@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TTFTExture FontHeight="80" FirstChar="一" LastChar="三">
+  <CharacterInfoDict>
+    <KeyValuePair Character="一">
+      <CharacterInfo XOffset="0" YOffset="0" width="72" height="13" />
+    </KeyValuePair>
+    <KeyValuePair Character="丁">
+      <CharacterInfo XOffset="0" YOffset="80" width="69" height="63" />
+    </KeyValuePair>
+    <KeyValuePair Character="丂">
+      <CharacterInfo XOffset="0" YOffset="160" width="69" height="67" />
+    </KeyValuePair>
+    <KeyValuePair Character="七">
+      <CharacterInfo XOffset="0" YOffset="240" width="69" height="58" />
+    </KeyValuePair>
+    <KeyValuePair Character="丄">
+      <CharacterInfo XOffset="0" YOffset="320" width="73" height="61" />
+    </KeyValuePair>
+    <KeyValuePair Character="丅">
+      <CharacterInfo XOffset="0" YOffset="400" width="71" height="65" />
+    </KeyValuePair>
+    <KeyValuePair Character="丆">
+      <CharacterInfo XOffset="0" YOffset="480" width="64" height="51" />
+    </KeyValuePair>
+    <KeyValuePair Character="万">
+      <CharacterInfo XOffset="0" YOffset="560" width="69" height="62" />
+    </KeyValuePair>
+    <KeyValuePair Character="丈">
+      <CharacterInfo XOffset="0" YOffset="640" width="71" height="69" />
+    </KeyValuePair>
+    <KeyValuePair Character="三">
+      <CharacterInfo XOffset="0" YOffset="720" width="77" height="53" />
+    </KeyValuePair>
+  </CharacterInfoDict>
+</TTFTExture>
