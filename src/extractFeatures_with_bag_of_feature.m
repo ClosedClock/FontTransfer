@@ -35,8 +35,10 @@ for i = 1:length(fontNames)
     end
 end
 
+% Save to workspace
 assignin('base', 'trainSet', trainSet)
 assignin('base', 'testSet', testSet)
+% Save to file
 save(fullfile(folderPath, '../data/trainTestSet.mat'), 'trainSet', 'testSet');
 %%
 %Apply the newly trained classifier to categorize new images.
