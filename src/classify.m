@@ -13,8 +13,9 @@ for i = 1:fontNum
         distances(i, j) = distance(featureVector, trainSet(i, j, :));
     end
 end
+assignin('base', 'd', distances)
 [~, indices] = mink(reshape(distances, [1, numel(distances)]), k);
 
-fontIndex = mode(floor(indices / trainNum) + 1);
+fontIndex = mode(floor(mod(indices - 1, fontNum)) + 1);
 
 end

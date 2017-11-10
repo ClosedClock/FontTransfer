@@ -6,7 +6,7 @@ setDir = fullfile(folderPath, '../img');
 imgSets = imageSet(setDir, 'recursive');
 %% 
 % Pick the first two images from each image set to create training sets.
-[trainingSets,TestSets] = partition(imgSets, [1,40]);
+[trainingSets,TestSets] = partition(imgSets, [50,20]);
 %%
 % Create the bag of features. This process can take a few minutes.
 bag = bagOfFeatures(trainingSets,'Verbose',true,'VocabularySize',50);
@@ -30,7 +30,7 @@ for i = 1:length(fontNames)
     end
     
     for j = 1:testNum
-        img = read(imgSets(i), j);
+        img = read(imgSets(i), j + trainNum);
         testSet(i, j, :) = encode(bag, img);
     end
 end
