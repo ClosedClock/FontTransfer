@@ -5,12 +5,31 @@ from PIL import Image, ImageFont, ImageDraw
 from os.path import join, exists
 import os
 
+## -------------------- Settings -----------------
+_override = True # Control whether to override existing images
+FONTS_DIR = join('..', 'fonts') # Folder where font files are saved
+OUT_DIR = join('..', 'img') # Folder to save output images
+
+# List of font files to be used in generating images
+#font_files = [file for file in os.listdir(FONTS_DIR) if '.tt' in file] # all fonts
+font_files = ['simkai.ttf', 'Xingkai.ttc', 'Baoli.ttc', 'Songti.ttc']
+
+# List of font files that require an offset
+offset_fonts = ['Baoli.ttc', 'Hannotate.ttc', 'Hanzipen.ttc', 'Songti.ttc', 'Xingkai.ttc', 'Yuanti.ttc']
+
+## -------------------- Constants -----------------
 SIZE = 80 # Size of image
 START_INDEX = 0x4E00 # Unicode range of Chinese characters
 END_INDEX = 0x9FBB
-OVERRIDE = True # Control whether to override existing images
+
+
+## -------------------- Main Program -----------------
 
 def get_common_chinese_unicodes():
+    '''
+    Read saved for unicodes of common chinese characters and output it as
+    a list.
+    '''
     import csv
     common_chinese_unicodes = []
     with open(join('..', 'data', 'common_chinese_unicodes.csv'), newline='') as csvfile:
@@ -21,28 +40,26 @@ def get_common_chinese_unicodes():
 
 
 def main():
-    unicodes = get_common_chinese_unicodes()[100:110]
-
-    FONTS_DIR = join('..', 'fonts') # Folder where font files are saved
-    OUT_DIR = join('..', 'test_output') # Folder to save output images
+    unicodes = get_common_chinese_unicodes()[0:1000]
 
     if not exists(OUT_DIR):
         print('Warning: %s not exist' % OUT_DIR)
         os.makedirs(OUT_DIR)
 
-    # List of font files to be used in generating images
-    font_files = [file for file in os.listdir(FONTS_DIR) if '.tt' in file]
-    #font_files = ['simkai.ttf', 'Xingkai.ttc']
-    offset_fonts = ['Baoli.ttc', 'Hannotate.ttc', 'Hanzipen.ttc', 'Songti.ttc', 'Xingkai.ttc', 'Yuanti.ttc']
-
     for font_file in font_files:
+        font_name = font_file[:-4]
+            
         if not exists(join(FONTS_DIR, font_file)):
             raise IOError('Font file not found: ' + font_file)
+        
+        if not exists(join(OUT_DIR, font_name)):
+            os.makedirs(join(OUT_DIR, font_name))
+            
         print('Current font: ' + font_file)
         font = ImageFont.truetype(join(FONTS_DIR, font_file), SIZE)
         for index in range(len(unicodes)):
-            output_filename = join(OUT_DIR, font_file[:-4] + '_%04d.png' % index)
-            if exists(output_filename) and not OVERRIDE:
+            output_filename = join(OUT_DIR, font_name, font_name + '_%04d.png' % index)
+            if exists(output_filename) and not _override:
                 continue
             im = Image.new("L", (SIZE, SIZE), color=255) # 8-bit black and white
             draw = ImageDraw.Draw(im)
