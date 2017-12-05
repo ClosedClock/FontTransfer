@@ -12,16 +12,20 @@ OUT_DIR = join('..', 'img') # Folder to save output images
 
 # List of font files to be used in generating images
 #font_files = [file for file in os.listdir(FONTS_DIR) if '.tt' in file] # all fonts
-font_files = ['simkai.ttf', 'Xingkai.ttc', 'Baoli.ttc', 'Songti.ttc']
+all_font_files = ['Baoli.ttc', 'Hannotate.ttc', 'Hanzipen.ttc', 'simkai.ttf', 'Songti.ttc',
+                  'STHeiti.ttc', 'WeibeiSC.otf', 'Xingkai.ttc', 'Yuanti.ttc']
+font_files = all_font_files
 
 # List of font files that require an offset
-offset_fonts = ['Baoli.ttc', 'Hannotate.ttc', 'Hanzipen.ttc', 'Songti.ttc', 'Xingkai.ttc', 'Yuanti.ttc']
+offset_fonts = ['Baoli.ttc', 'Hannotate.ttc', 'WeibeiSC.otf', 'Hanzipen.ttc', 'Songti.ttc',
+                'Xingkai.ttc', 'Yuanti.ttc']
+
+COMMON_UNICODE_NUM = 0 # 0 for all common unicodes
 
 ## -------------------- Constants -----------------
 SIZE = 80 # Size of image
 START_INDEX = 0x4E00 # Unicode range of Chinese characters
 END_INDEX = 0x9FBB
-
 
 ## -------------------- Main Program -----------------
 
@@ -40,7 +44,10 @@ def get_common_chinese_unicodes():
 
 
 def main():
-    unicodes = get_common_chinese_unicodes()[0:1000]
+    if COMMON_UNICODE_NUM is 0:
+        unicodes = get_common_chinese_unicodes()
+    else:
+        unicodes = get_common_chinese_unicodes()[0:COMMON_UNICODE_NUM]
 
     if not exists(OUT_DIR):
         print('Warning: %s not exist' % OUT_DIR)
@@ -69,6 +76,9 @@ def main():
                 draw.text((0, 0), chr(unicodes[index]), font=font)
             # write into file
             im.save(output_filename)
+            if (index + 1) % 100 == 0:
+                print('.', end='')
+        print('')
 
 if __name__ == '__main__':
     main()
