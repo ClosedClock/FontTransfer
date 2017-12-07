@@ -1,5 +1,5 @@
-# FontTransfermation
-Chinese Character Font Classification and Transformation
+# FontTransfer
+Chinese Character Font Classification and Transfer
 
 # 注意：为了效率高，文件应该分门别类。以下是文件夹的作用：
 
