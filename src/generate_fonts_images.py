@@ -5,6 +5,8 @@ from PIL import Image, ImageFont, ImageDraw
 from os.path import join, exists
 import os
 
+COMMON_UNICODE_NUM = 0 # 0 for all common unicodes
+
 ## -------------------- Settings -----------------
 _override = True # Control whether to override existing images
 FONTS_DIR = join('..', 'fonts') # Folder where font files are saved
@@ -19,8 +21,6 @@ font_files = ['Cao.ttf']
 # List of font files that require an offset
 offset_fonts = ['Baoli.ttc', 'Hannotate.ttc', 'WeibeiSC.otf', 'Hanzipen.ttc', 'Songti.ttc',
                 'Xingkai.ttc', 'Yuanti.ttc']
-
-COMMON_UNICODE_NUM = 0 # 0 for all common unicodes
 
 ## -------------------- Constants -----------------
 SIZE = 80 # Size of image
