@@ -17,7 +17,7 @@ val_set_size = 450
 assert train_set_size + val_set_size <= 3498
 
 # Dataset Parameters
-batch_size = 5
+batch_size = 20
 load_size = 80
 fine_size = 80
 target_size = 40
@@ -32,8 +32,8 @@ do_training = True
 do_validation = False
 # do_comparison = True
 on_server = True
-step_display = 20
-step_save = 100
+step_display = 100
+step_save = 1000
 save_path = '../../saved_train_data/cnn_l1/style_transfer'
 # start_from = save_path + '-0'
 start_from = ''
@@ -62,37 +62,8 @@ opt_data = {
     'load_size': load_size,
     'fine_size': fine_size,
     'target_size': target_size,
-    'original_mean': mean_map[original_font],
-    'target_mean': mean_map[target_font],
-    'randomize': False
-}
-
-# Construct dataloader
-opt_data_train = {
-    'data_root': '../../img/',
-    'original_font': original_font,
-    'target_font': target_font,
-    'start_index': 0,
-    'number': train_set_size,
-    'load_size': load_size,
-    'fine_size': fine_size,
-    'target_size': target_size,
-    'original_mean': mean_map[original_font],
-    'target_mean': mean_map[target_font],
-    'randomize': False
-}
-
-opt_data_val = {
-    'data_root': '../../img/',
-    'original_font': original_font,
-    'target_font': target_font,
-    'start_index': train_set_size,
-    'number': val_set_size,
-    'load_size': load_size,
-    'fine_size': fine_size,
-    'target_size': target_size,
-    'original_mean': mean_map[original_font],
-    'target_mean': mean_map[target_font],
+    # 'original_mean': mean_map[original_font],
+    # 'target_mean': mean_map[target_font],
     'randomize': False
 }
 
