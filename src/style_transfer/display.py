@@ -1,7 +1,8 @@
 import scipy.misc
 from PIL import Image
 import numpy as np
-from os.path import join
+from os.path import join, exists
+import os
 
 OUT_DIR = '../../output'
 
@@ -22,6 +23,9 @@ def show_comparison(original_batch, target_batch, result_batch, save=False, mode
         image.paste(numpy_to_image(result_batch[i, :, :, 0]), (i * w, h))
         image.paste(numpy_to_image(target_batch[i, :, :, 0]), (i * w, 2 * h))
     if save:
+        if not exists(OUT_DIR):
+            print('Warning: %s not exist' % OUT_DIR)
+            os.makedirs(OUT_DIR)
         assert iter != -1
         if mode in ['display_train', 'display_val']:
             affix = mode[8:]
