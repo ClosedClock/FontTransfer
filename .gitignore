@@ -18,3 +18,10 @@ build
 # My configurations:
 test_output/
 fonts/
+img.tar.gz
+img.zip
+.idea
+img
+output
+saved_train_data
+code.zip
