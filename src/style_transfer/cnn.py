@@ -31,8 +31,10 @@ on_server = True
 step_display = 100
 step_save = 1000
 save_path = '../../saved_train_data/cnn_l1/style_transfer'
-# start_from = save_path + '-0'
-start_from = ''
+# start_from = ''
+start_from = save_path + '-final'
+
+variation_loss_importance = 0.0001 * 0
 
 # mean values of images for each font
 mean_map = {
@@ -158,7 +160,7 @@ class CharacterTransform:
             l1_loss = tf.losses.absolute_difference(self.labels, self.result)
             variation_loss = tf.image.total_variation(self.result)
 
-            self.loss = tf.reduce_sum(l1_loss + variation_loss * 0)
+            self.loss = tf.reduce_sum(l1_loss + variation_loss * variation_loss_importance)
 
             update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
             with tf.control_dependencies(update_ops):
@@ -176,10 +178,10 @@ class CharacterTransform:
 
             if len(start_from) > 1:
                 self.saver.restore(self.session, start_from)
-                print('Started from last time: %s' % start_from)
+                print('Restored from last time: %s' % start_from)
             else:
                 self.session.run(tf.global_variables_initializer())
-                print('Initialized')
+                print('Initialized model')
 
             for step in range(training_iters):
                 # Data to feed into the placeholder variables in the tensorflow graph
@@ -216,8 +218,11 @@ class CharacterTransform:
                     self.saver.save(self.session, save_path, global_step=step)
                     print('Model saved in file: %s at Iter-%d' % (save_path, step))
 
+            self.saver.save(self.session, save_path + '-final')
+            print('Model saved in file: %s-final after the whole training process' % save_path)
+
     def validate(self):
-        print('Evaluation on the whole validation set...')
+        print('Begin evaluating on the whole validation set...')
 
         num_batch = self.loader.size_val()//batch_size
         loss_total = 0.
