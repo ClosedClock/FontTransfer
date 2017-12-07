@@ -5,9 +5,13 @@ import datetime
 import glob
 np.random.seed(123)
 
+
 class TrainValSetLoader(object):
     def __init__(self, **kwargs):
-
+        """
+        Initialize this data loader with given parameters
+        :param kwargs: parameters
+        """
         load_size = int(kwargs['load_size'])
         fine_size = int(kwargs['fine_size'])
         target_size = int(kwargs['target_size'])
@@ -29,7 +33,7 @@ class TrainValSetLoader(object):
         list_original = np.array(list_original, np.object)
         list_target = np.array(list_target, np.object)
 
-        # permutation
+        # Permutation. Can be fixed by feeding a seed
         np.random.seed()
         perm = np.random.permutation(total_size)
         list_original[:] = list_original[perm]
@@ -47,9 +51,19 @@ class TrainValSetLoader(object):
         self.val_set = DataLoaderDisk(val_original, val_target, load_size, fine_size, target_size)
 
     def next_batch_train(self, batch_size):
+        """
+        Return next batch of data on training set
+        :param batch_size: batch size
+        :return: tuple, (original_batch, target_batch)
+        """
         return self.train_set.next_batch(batch_size)
 
     def next_batch_val(self, batch_size):
+        """
+        Return next batch of data on validation set
+        :param batch_size: batch size
+        :return: tuple, (original_batch, target_batch)
+        """
         return self.val_set.next_batch(batch_size)
 
     def size_train(self):
@@ -59,6 +73,7 @@ class TrainValSetLoader(object):
         return self.val_set.size()
 
     def reset_val(self):
+        """Reset the inner counter of validation set to 0 (start from the beginning). """
         self.val_set.reset()
 
 
@@ -88,7 +103,8 @@ class DataLoaderDisk(object):
             original_image = scipy.misc.imread(self.list_original[self._idx])
             original_image = scipy.misc.imresize(original_image, (self.load_size, self.load_size))
             original_image = original_image.astype(np.float32)/255.
-            # original_image = -(original_image - self.original_mean) # Revert to white characters on black background
+            # Revert to white characters on black background
+            # original_image = -(original_image - self.original_mean)
             original_image = 1 - original_image
 
             target_image = scipy.misc.imread(self.list_target[self._idx])
@@ -105,8 +121,10 @@ class DataLoaderDisk(object):
             # else:
             #     offset_h = (self.load_size-self.fine_size)//2
             #     offset_w = (self.load_size-self.fine_size)//2
-            # original_batch[i, :, :, 0] = original_image[offset_h:offset_h+self.fine_size, offset_w:offset_w+self.fine_size]
-            # target_batch[i, :, :] = target_image[offset_h:offset_h+self.fine_size, offset_w:offset_w+self.fine_size]
+            # original_batch[i, :, :, 0] = \
+            #     original_image[offset_h:offset_h+self.fine_size, offset_w:offset_w+self.fine_size]
+            # target_batch[i, :, :] \
+            #     = target_image[offset_h:offset_h+self.fine_size, offset_w:offset_w+self.fine_size]
 
             original_batch[i, :, :, 0] = original_image
             target_batch[i, :, :, 0] = target_image

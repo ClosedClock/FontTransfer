@@ -8,35 +8,35 @@ import os
 from DataLoader import TrainValSetLoader
 from display import show_comparison
 
+# Sizes of training and validation sets
 train_set_size = 3000
 val_set_size = 450
-assert train_set_size + val_set_size <= 3498
+assert train_set_size + val_set_size <= 3498 # Only 3498 in total
 
 # Dataset Parameters
 batch_size = 20
-load_size = 80
-fine_size = 80
-target_size = 40
-original_font = 'Baoli'
-target_font = 'Songti'
+load_size = 80 # size of the images on disk
+fine_size = 80 # size of the images after disposition (flip, translation, ...)
+target_size = 40 # size of output images
+original_font = 'Baoli' # transfer style from this font
+target_font = 'Songti' # transfer style to this font
 
 # Training Parameters
-learning_rate = 0.001
-dropout = 0.5 # Dropout, probability to keep units
+learning_rate = 0.001 # Initial learning rate for Adam optimizer
+dropout = 0.5 # Dropout, probability to -keep- units
 training_iters = 10000
 do_training = True
 do_validation = False
-# do_comparison = True
-on_server = True
-step_display = 100
+on_server = True # Save instead of showing results on server
+step_display = 100 # Interval to test loss on training and validation set, and display(save) comparison
 step_save = 1000
 save_path = '../../saved_train_data/cnn_l1/style_transfer'
 # start_from = ''
-start_from = save_path + '-final'
+start_from = save_path + '-final' # Saved data file
 
-variation_loss_importance = 0.0001 * 0
+variation_loss_scale = 0.0001 * 0 # Scale of variation loss in total loss function
 
-# mean values of images for each font
+# mean values of images for each font (currently not in use)
 mean_map = {
     'Cao': 0.8508965474736796,
     'Hannotate': 0.74494465944527832,
@@ -65,25 +65,29 @@ opt_data = {
     'randomize': False
 }
 
+
 def batch_norm_layer(x, train_phase, scope_bn):
+    """
+    Apply a batch norm layer on input x.
+    :param x: input tensor
+    :param train_phase: whether need to train parameters
+    :param scope_bn: variable scope
+    :return: output tensor after batch normalization
+    """
     return batch_norm(x, decay=0.9, center=True, scale=True,
-    updates_collections=None,
-    is_training=train_phase,
-    reuse=None,
-    trainable=True,
-    scope=scope_bn)
+                      updates_collections=None,
+                      is_training=train_phase,
+                      reuse=None,
+                      trainable=True,
+                      scope=scope_bn)
 
 
 class CharacterTransform:
     def __init__(self):
-        '''Initialize the class by loading the required datasets 
-        and building the graph'''
+        """Initialize the cnn and prepare data. """
+
         self.graph = tf.Graph()
         self.build_graph()
-
-        # if do_training:
-        #     self.loader_train = DataLoaderDisk(**opt_data_train)
-        # self.loader_val = DataLoaderDisk(**opt_data_val)
 
         self.loader = TrainValSetLoader(**opt_data)
 
@@ -91,10 +95,10 @@ class CharacterTransform:
         # self.session.run(tf.global_variables_initializer())
         # print('finished')
 
-
     def build_graph(self):
-        print('Building graph')
+        """Build the cnn graph. """
 
+        print('Building graph')
         with self.graph.as_default():
             # Input data
             self.images = tf.placeholder(tf.float32, shape=(None, fine_size, fine_size, 1))
@@ -150,17 +154,19 @@ class CharacterTransform:
             fc6 = batch_norm_layer(fc6, self.training, 'bn6')
             fc6 = tf.nn.dropout(fc6, self.keep_dropout)
 
-
+            # Output layer. Sigmoid function is used to gain result between 0 and 1
             out = tf.contrib.layers.fully_connected(fc6, target_size * target_size, tf.nn.sigmoid,
                                                     weights_initializer=xavier_initializer(uniform=False))
             # out = tf.multiply(tf.add(tf.sign(tf.subtract(out, tf.constant(0.5))), tf.constant(1.)), 0.5)
 
+            # Reshape the output to a 2d image
             self.result = tf.reshape(out, [-1, target_size, target_size, 1])
 
             l1_loss = tf.losses.absolute_difference(self.labels, self.result)
             variation_loss = tf.image.total_variation(self.result)
 
-            self.loss = tf.reduce_sum(l1_loss + variation_loss * variation_loss_importance)
+            # Loss is a combination of L1 norm loss and total variation loss
+            self.loss = tf.reduce_mean(l1_loss + variation_loss * variation_loss_scale)
 
             update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
             with tf.control_dependencies(update_ops):
@@ -172,10 +178,13 @@ class CharacterTransform:
         print('Graph building finished')
 
     def train_model(self):
-        '''Train the model with minibatches in a tensorflow session'''
+        """
+        Train the model.
+        Display comparison for every step_display steps and save parameters for every step_save steps
+        """
 
         with tf.Session(graph=self.graph) as self.session:
-
+            # If a saved file is specified, restore from that file. Otherwise initialize
             if len(start_from) > 1:
                 self.saver.restore(self.session, start_from)
                 print('Restored from last time: %s' % start_from)
@@ -183,14 +192,16 @@ class CharacterTransform:
                 self.session.run(tf.global_variables_initializer())
                 print('Initialized model')
 
+            # Start training
             for step in range(training_iters):
                 # Data to feed into the placeholder variables in the tensorflow graph
                 images_batch, labels_batch = self.loader.next_batch_train(batch_size)
 
+                # Calculate loss and do comparison for every step_display steps
                 if step % step_display == 0:
                     print('[%s]:' % (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
 
-                    # Calculate batch loss and accuracy on training set
+                    # Calculate batch loss on training set
                     loss, result_batch = self.session.run([self.loss, self.result],
                                 feed_dict={self.images: images_batch, self.labels: labels_batch,
                                            self.keep_dropout: 1., self.training: False})
@@ -198,7 +209,7 @@ class CharacterTransform:
                     show_comparison(images_batch, labels_batch, result_batch,
                                     save=on_server, mode='display_train', iter=step)
 
-                    # Calculate batch loss and accuracy on validation set
+                    # Calculate batch loss on validation set
                     images_batch_val, labels_batch_val = self.loader.next_batch_val(batch_size)
                     loss, result_batch = self.session.run([self.loss, self.result],
                                 feed_dict={self.images: images_batch_val, self.labels: labels_batch_val,
@@ -210,7 +221,7 @@ class CharacterTransform:
                 # Run optimization op (backprop)
                 self.session.run(self.optimizer, feed_dict={self.images: images_batch, self.labels: labels_batch,
                                                             self.keep_dropout: dropout, self.training: True})
-                # Save model
+                # Save model for every step_save steps
                 if step != 0 and step % step_save == 0:
                     if not exists(dirname(save_path)):
                         print('Warning: %s not exist' % dirname(save_path))
@@ -218,10 +229,12 @@ class CharacterTransform:
                     self.saver.save(self.session, save_path, global_step=step)
                     print('Model saved in file: %s at Iter-%d' % (save_path, step))
 
+            # Save model after the whole training process
             self.saver.save(self.session, save_path + '-final')
             print('Model saved in file: %s-final after the whole training process' % save_path)
 
     def validate(self):
+        """Run the model on the whole validation set and show average loss. """
         print('Begin evaluating on the whole validation set...')
 
         num_batch = self.loader.size_val()//batch_size
@@ -241,9 +254,15 @@ class CharacterTransform:
         print("Evaluation Finished! Loss = " + "{:.6f}".format(loss_total))
 
     def prediction(self, image_batch):
-        pass
+        """
+        Run the model on one image batch
+        :param image_batch: input images
+        :return: output images after font transfer
+        """
+        raise RuntimeError('Not implemented!')
 
     def run(self):
+        """Run the model and do training or validation according to settings. """
         if do_training:
             self.train_model()
         if do_validation:
