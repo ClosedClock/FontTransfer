@@ -2,6 +2,8 @@ import tensorflow as tf
 import numpy as np
 import datetime
 from tensorflow.contrib.layers.python.layers import xavier_initializer, batch_norm
+from os.path import dirname, exists
+import os
 
 from DataLoader import TrainValSetLoader
 from display import show_comparison
@@ -214,6 +216,9 @@ class CharacterTransform:
                                                             self.keep_dropout: dropout, self.training: True})
                 # Save model
                 if step != 0 and step % step_save == 0:
+                    if not exists(dirname(save_path)):
+                        print('Warning: %s not exist' % dirname(save_path))
+                        os.makedirs(dirname(save_path))
                     self.saver.save(self.session, save_path, global_step=step)
                     print('Model saved in file: %s at Iter-%d' % (save_path, step))
 
