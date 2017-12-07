@@ -18,8 +18,9 @@ assert train_set_size + val_set_size <= 3498
 
 # Dataset Parameters
 batch_size = 100
-load_size = 30
-fine_size = 30
+load_size = 80
+fine_size = 80
+target_size = 40
 original_font = 'Baoli'
 target_font = 'Songti'
 
@@ -30,9 +31,9 @@ training_iters = 10000
 do_training = True
 do_validation = False
 do_comparison = True
-step_display = 100
-step_save = 1000
-save_path = '../../saved_train_data/sigmoid/style_transfer'
+step_display = 20
+step_save = 100
+save_path = '../../saved_train_data/cnn/style_transfer'
 # start_from = save_path + '-0'
 start_from = ''
 
@@ -59,6 +60,7 @@ opt_data_train = {
     'number': train_set_size,
     'load_size': load_size,
     'fine_size': fine_size,
+    'target_size': target_size,
     'original_mean': mean_map[original_font],
     'target_mean': mean_map[target_font],
     'randomize': False
@@ -72,6 +74,7 @@ opt_data_val = {
     'number': val_set_size,
     'load_size': load_size,
     'fine_size': fine_size,
+    'target_size': target_size,
     'original_mean': mean_map[original_font],
     'target_mean': mean_map[target_font],
     'randomize': False
@@ -107,46 +110,67 @@ class CharacterTransform:
 
         with self.graph.as_default():
             # Input data
-            self.images = tf.placeholder(tf.float32, shape=(None, fine_size, fine_size))
-            self.labels = tf.placeholder(tf.float32, shape=(None, fine_size, fine_size))
+            self.images = tf.placeholder(tf.float32, shape=(None, fine_size, fine_size, 1))
+            self.labels = tf.placeholder(tf.float32, shape=(None, target_size, target_size, 1))
             self.training = tf.placeholder(tf.bool)
             self.keep_dropout = tf.placeholder(tf.float32)
 
             global_step = tf.Variable(0,trainable=False)
 
-            fc1 = tf.contrib.layers.fully_connected(tf.reshape(self.images, [-1, fine_size * fine_size]), 5000, tf.nn.relu,
-                                                    weights_initializer=xavier_initializer(uniform=False))
-            fc1 = batch_norm_layer(fc1, self.training, 'bn1')
-            fc1 = tf.nn.dropout(fc1, self.keep_dropout)
+            # 80 -> 40 -> 20
+            conv1 = tf.layers.conv2d(self.images, filters=96, kernel_size=11, strides=2, padding='same',
+                                     kernel_initializer = xavier_initializer(uniform=False))
+            conv1 = batch_norm_layer(conv1, self.training, 'bn1')
+            conv1 = tf.nn.relu(conv1)
+            print('conv1 shape = %s' % conv1.shape)
+            pool1 = tf.layers.max_pooling2d(conv1, pool_size=3, strides=2, padding='same')
+            print('pool1 shape = %s' % pool1.shape)
+
+            # 20 -> 10
+            conv2 = tf.layers.conv2d(pool1, filters=256, kernel_size=5, strides=1, padding='same',
+                                     kernel_initializer = xavier_initializer(uniform=False))
+            conv2 = batch_norm_layer(conv2, self.training, 'bn2')
+            conv2 = tf.nn.relu(conv2)
+            print('conv2 shape = %s' % conv2.shape)
+            pool2 = tf.layers.max_pooling2d(conv2, pool_size=3, strides=2, padding='same')
+            print('pool2 shape = %s' % pool2.shape)
+
+            # 10 -> 10
+            conv3 = tf.layers.conv2d(pool2, filters=384, kernel_size=3, strides=1, padding='same',
+                                     kernel_initializer = xavier_initializer(uniform=False))
+            conv3 = batch_norm_layer(conv3, self.training, 'bn3')
+            conv3 = tf.nn.relu(conv3)
+            print('conv3 shape = %s' % conv3.shape)
+
+            # 10 -> 10
+            conv4 = tf.layers.conv2d(conv3, filters=256, kernel_size=3, strides=1, padding='same',
+                                     kernel_initializer = xavier_initializer(uniform=False))
+            conv4 = batch_norm_layer(conv4, self.training, 'bn4')
+            conv4 = tf.nn.relu(conv4)
+            print('conv4 shape = %s' % conv4.shape)
 
 
-            fc2 = tf.contrib.layers.fully_connected(fc1, 5000, tf.nn.relu,
-                                                    weights_initializer=xavier_initializer(uniform=False))
-            fc2 = batch_norm_layer(fc2, self.training, 'bn2')
-            fc2 = tf.nn.dropout(fc2, self.keep_dropout)
-
-            fc3 = tf.contrib.layers.fully_connected(fc2, 5000, tf.nn.relu,
-                                                    weights_initializer=xavier_initializer(uniform=False))
-            fc3 = batch_norm_layer(fc3, self.training, 'bn3')
-            fc3 = tf.nn.dropout(fc3, self.keep_dropout)
-
-            fc4 = tf.contrib.layers.fully_connected(fc3, 5000, tf.nn.relu,
-                                                    weights_initializer=xavier_initializer(uniform=False))
-            fc4 = batch_norm_layer(fc4, self.training, 'bn4')
-            fc4 = tf.nn.dropout(fc4, self.keep_dropout)
-
-            fc5 = tf.contrib.layers.fully_connected(fc4, 5000, tf.nn.relu,
+            fc5 = tf.reshape(conv4, [-1, 256 * 10 * 10])
+            print('fc5 shape = %s' % fc5.shape)
+            fc5 = tf.contrib.layers.fully_connected(fc5, 5000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
             fc5 = batch_norm_layer(fc5, self.training, 'bn5')
             fc5 = tf.nn.dropout(fc5, self.keep_dropout)
 
-            out = tf.contrib.layers.fully_connected(fc5, fine_size * fine_size, tf.nn.sigmoid,
+
+            fc6 = tf.contrib.layers.fully_connected(fc5, 5000, tf.nn.relu,
+                                                    weights_initializer=xavier_initializer(uniform=False))
+            fc6 = batch_norm_layer(fc6, self.training, 'bn6')
+            fc6 = tf.nn.dropout(fc6, self.keep_dropout)
+
+
+            out = tf.contrib.layers.fully_connected(fc6, target_size * target_size, tf.nn.sigmoid,
                                                     weights_initializer=xavier_initializer(uniform=False))
             # out = tf.multiply(tf.add(tf.sign(tf.subtract(out, tf.constant(0.5))), tf.constant(1.)), 0.5)
 
-            self.result = tf.reshape(out, [-1, fine_size, fine_size])  # trying to define a variable to store results
+            self.result = tf.reshape(out, [-1, target_size, target_size, 1])  # trying to define a variable to store results
 
-            self.loss = tf.reduce_sum(tf.losses.mean_squared_error(out, tf.reshape(self.labels, [-1, fine_size * fine_size])))
+            self.loss = tf.reduce_sum(tf.losses.mean_squared_error(out, tf.reshape(self.labels, [-1, target_size * target_size])))
 
             update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
             with tf.control_dependencies(update_ops):
