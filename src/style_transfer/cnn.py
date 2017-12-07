@@ -8,12 +8,6 @@ import os
 from DataLoader import TrainValSetLoader
 from display import show_comparison
 
-POOL1 = False  # Set to True to add pooling after first conv layer
-POOL2 = False  # Set to True to add pooling after second conv layer
-POOL3 = True  # Set to True to add pooling after third conv layer
-BN = False  # Set to True to use batch normalization
-BIAS = True
-
 train_set_size = 3000
 val_set_size = 450
 assert train_set_size + val_set_size <= 3498
