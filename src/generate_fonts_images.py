@@ -14,7 +14,7 @@ OUT_DIR = join('..', 'img') # Folder to save output images
 #font_files = [file for file in os.listdir(FONTS_DIR) if '.tt' in file] # all fonts
 all_font_files = ['Baoli.ttc', 'Hannotate.ttc', 'Hanzipen.ttc', 'simkai.ttf', 'Songti.ttc',
                   'STHeiti.ttc', 'WeibeiSC.otf', 'Xingkai.ttc', 'Yuanti.ttc']
-font_files = all_font_files
+font_files = ['Cao.ttf']
 
 # List of font files that require an offset
 offset_fonts = ['Baoli.ttc', 'Hannotate.ttc', 'WeibeiSC.otf', 'Hanzipen.ttc', 'Songti.ttc',
