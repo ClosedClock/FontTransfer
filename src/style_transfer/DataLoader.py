@@ -43,12 +43,14 @@ class DataLoaderDisk(object):
             original_image = scipy.misc.imread(self.list_original[self._idx])
             original_image = scipy.misc.imresize(original_image, (self.load_size, self.load_size))
             original_image = original_image.astype(np.float32)/255.
-            original_image = -(original_image - self.original_mean) # Revert to white characters on black background
+            # original_image = -(original_image - self.original_mean) # Revert to white characters on black background
+            original_image = 1 - original_image
 
             target_image = scipy.misc.imread(self.list_target[self._idx])
             target_image = scipy.misc.imresize(target_image, (self.load_size, self.load_size))
             target_image = target_image.astype(np.float32)/255.
-            target_image = -(target_image - self.target_mean)
+            # target_image = -(target_image - self.target_mean)
+            target_image = 1 - target_image
             if self.randomize:
                 flip = np.random.random_integers(0, 1)
                 if flip>0:

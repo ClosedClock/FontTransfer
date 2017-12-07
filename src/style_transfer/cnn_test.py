@@ -32,7 +32,7 @@ do_validation = False
 do_comparison = True
 step_display = 100
 step_save = 1000
-save_path = '../../saved_train_data/style_transfer'
+save_path = '../../saved_train_data/sigmoid/style_transfer'
 # start_from = save_path + '-0'
 start_from = ''
 
@@ -114,34 +114,35 @@ class CharacterTransform:
 
             global_step = tf.Variable(0,trainable=False)
 
-            fc1 = tf.contrib.layers.fully_connected(tf.reshape(self.images, [-1, fine_size * fine_size]), 2000, tf.nn.relu,
+            fc1 = tf.contrib.layers.fully_connected(tf.reshape(self.images, [-1, fine_size * fine_size]), 5000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
             fc1 = batch_norm_layer(fc1, self.training, 'bn1')
             fc1 = tf.nn.dropout(fc1, self.keep_dropout)
 
 
-            fc2 = tf.contrib.layers.fully_connected(fc1, 2000, tf.nn.relu,
+            fc2 = tf.contrib.layers.fully_connected(fc1, 5000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
             fc2 = batch_norm_layer(fc2, self.training, 'bn2')
             fc2 = tf.nn.dropout(fc2, self.keep_dropout)
 
-            fc3 = tf.contrib.layers.fully_connected(fc2, 2000, tf.nn.relu,
+            fc3 = tf.contrib.layers.fully_connected(fc2, 5000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
             fc3 = batch_norm_layer(fc3, self.training, 'bn3')
             fc3 = tf.nn.dropout(fc3, self.keep_dropout)
 
-            fc4 = tf.contrib.layers.fully_connected(fc3, 2500, tf.nn.relu,
+            fc4 = tf.contrib.layers.fully_connected(fc3, 5000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
             fc4 = batch_norm_layer(fc4, self.training, 'bn4')
             fc4 = tf.nn.dropout(fc4, self.keep_dropout)
 
-            fc5 = tf.contrib.layers.fully_connected(fc4, 2500, tf.nn.relu,
+            fc5 = tf.contrib.layers.fully_connected(fc4, 5000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
             fc5 = batch_norm_layer(fc5, self.training, 'bn5')
             fc5 = tf.nn.dropout(fc5, self.keep_dropout)
 
-            out = tf.contrib.layers.fully_connected(fc5, fine_size * fine_size, None,
+            out = tf.contrib.layers.fully_connected(fc5, fine_size * fine_size, tf.nn.sigmoid,
                                                     weights_initializer=xavier_initializer(uniform=False))
+            # out = tf.multiply(tf.add(tf.sign(tf.subtract(out, tf.constant(0.5))), tf.constant(1.)), 0.5)
 
             self.result = tf.reshape(out, [-1, fine_size, fine_size])  # trying to define a variable to store results
 
