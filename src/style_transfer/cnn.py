@@ -4,37 +4,75 @@ import datetime
 from tensorflow.contrib.layers.python.layers import xavier_initializer, batch_norm
 from os.path import dirname, exists
 import os
+import getpass
 
 from DataLoader import TrainValSetLoader
 from display import show_comparison
 
-# Sizes of training and validation sets
-train_set_size = 3000
-val_set_size = 450
-assert train_set_size + val_set_size <= 3498 # Only 3498 in total
+user = getpass.getuser()
+print('Current user is ' + user)
 
-# Dataset Parameters
-batch_size = 20
-load_size = 160 # size of the images on disk
-fine_size = 160 # size of the images after disposition (flip, translation, ...)
-target_size = 40 # size of output images
-original_font = 'Baoli' # transfer style from this font
-target_font = 'Songti' # transfer style to this font
+if user == 'zijinshi':
+    # Sizes of training and validation sets
+    train_set_size = 3000
+    val_set_size = 450
+    assert train_set_size + val_set_size <= 3498 # Only 3498 in total
 
-# Training Parameters
-learning_rate = 0.001 # Initial learning rate for Adam optimizer
-dropout = 0.5 # Dropout, probability to -keep- units
-training_iters = 10000
-do_training = True
-do_validation = False
-on_server = True # Save instead of showing results on server
-step_display = 10 # Interval to test loss on training and validation set, and display(save) comparison
-step_save = 1000
-save_path = '../../saved_train_data/cnn_v2/style_transfer'
-start_from = ''
-# start_from = save_path + '-final' # Saved data file
+    # Dataset Parameters
+    batch_size = 20
+    load_size = 160 # size of the images on disk
+    fine_size = 160 # size of the images after disposition (flip, translation, ...)
+    target_size = 40 # size of output images
+    original_font = 'Baoli' # transfer style from this font
+    target_font = 'Songti' # transfer style to this font
 
-variation_loss_scale = 0.0001 * 0 # Scale of variation loss in total loss function
+    # Training Parameters
+    learning_rate = 0.001 # Initial learning rate for Adam optimizer
+    dropout = 0.5 # Dropout, probability to -keep- units
+    training_iters = 10000
+    do_training = True
+    do_validation = False
+    on_server = True # Save instead of showing results on server
+    step_display = 10 # Interval to test loss on training and validation set, and display(save) comparison
+    step_save = 1000
+    save_path = '../../saved_train_data/cnn_v2/style_transfer'
+    start_from = ''
+    # start_from = save_path + '-final' # Saved data file
+
+    variation_loss_scale = 0.0001 * 0 # Scale of variation loss in total loss function
+
+else:
+    train_set_size = 3400
+    val_set_size = 98
+    assert train_set_size + val_set_size <= 3498
+
+    # Graph selection
+    NN = True  ## True means we use only fully connected layer
+    l2_loss = True  ## True means we use l2_loss function
+
+    # Dataset Parameters
+    batch_size = 100
+    load_size = 80
+    fine_size = 80
+    target_size = 40
+    original_font = 'Baoli'
+    target_font = 'Songti'
+
+    # Training Parameters
+    learning_rate = 0.001
+    dropout = 0.8  # Dropout, probability to keep units
+    training_iters = 10000
+    do_training = True
+    do_validation = False
+    # do_comparison = True
+    on_server = False
+    step_display = 200
+    step_save = 1000
+    save_path = '../../saved_train_data/cnn_l1/style_transfer'
+    start_from = ''
+    # start_from = save_path + '-final'
+
+    variation_loss_importance = 0.0001 * 0
 
 # mean values of images for each font (currently not in use)
 mean_map = {
