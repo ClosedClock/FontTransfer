@@ -15,13 +15,16 @@ with open('../../user.txt') as username_file:
 print('Current user is ' + user)
 
 if user == 'zijinshi':
+    # If is running on server, save instead of showing results on server
+    on_server = True
+
     # Sizes of training and validation sets
     train_set_size = 3000
     val_set_size = 450
     assert train_set_size + val_set_size <= 3498 # Only 3498 in total
 
     # Dataset Parameters
-    batch_size = 50
+    batch_size = 50 if on_server else 20
     load_size = 160 # size of the images on disk
     fine_size = 160 # size of the images after disposition (flip, translation, ...)
     target_size = 40 # size of output images
@@ -34,14 +37,14 @@ if user == 'zijinshi':
     training_iters = 10000
     do_training = True
     do_validation = False
-    on_server = True # Save instead of showing results on server
-    step_display = 100 # Interval to test loss on training and validation set, and display(save) comparison
+    # Interval to test loss on training and validation set, and display(save) comparison
+    step_display = 100 if on_server else 10
     step_save = 1000
     save_path = '../../saved_train_data/cnn_v2/style_transfer'
     #start_from = ''
     start_from = save_path + '-1000' # Saved data file
 
-    variation_loss_scale = 0.0001 * 0 # Scale of variation loss in total loss function
+    variation_loss_scale = 0.0001 # Scale of variation loss in total loss function
 
 else:
     train_set_size = 3400
