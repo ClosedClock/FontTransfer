@@ -12,6 +12,8 @@ from display import show_comparison
 user = getpass.getuser()
 print('Current user is ' + user)
 
+print('wefwef')
+
 if user == 'zijinshi':
     # Sizes of training and validation sets
     train_set_size = 3000
