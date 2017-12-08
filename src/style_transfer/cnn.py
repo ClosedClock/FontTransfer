@@ -185,14 +185,14 @@ class CharacterTransform:
             # pool2 = tf.layers.max_pooling2d(conv2, pool_size=3, strides=2, padding='same')
             # print('pool2 shape = %s' % pool2.shape)
 
-            # 20 -> 20
-            conv3 = tf.layers.conv2d(conv2, filters=256, kernel_size=5, strides=1, padding='same',
+            # 20 -> 10
+            conv3 = tf.layers.conv2d(conv2, filters=256, kernel_size=5, strides=2, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv3 = batch_norm_layer(conv3, self.training, 'bn3')
             conv3 = tf.nn.relu(conv3)
             print('conv3 shape = %s' % conv3.shape)
 
-            # 20 -> 20
+            # 10 -> 10
             conv4 = tf.layers.conv2d(conv3, filters=256, kernel_size=3, strides=1, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv4 = batch_norm_layer(conv4, self.training, 'bn4')
@@ -200,7 +200,7 @@ class CharacterTransform:
             print('conv4 shape = %s' % conv4.shape)
 
 
-            fc5 = tf.reshape(conv4, [-1, 256 * 20 * 20])
+            fc5 = tf.reshape(conv4, [-1, 256 * 10 * 10])
             print('fc5 input shape = %s' % fc5.shape)
             fc5 = tf.contrib.layers.fully_connected(fc5, 5000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
