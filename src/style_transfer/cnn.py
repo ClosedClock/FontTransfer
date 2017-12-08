@@ -199,8 +199,21 @@ class CharacterTransform:
             conv4 = tf.nn.relu(conv4)
             print('conv4 shape = %s' % conv4.shape)
 
+            # 10 -> 10
+            conv42 = tf.layers.conv2d(conv4, filters=256, kernel_size=3, strides=1, padding='same',
+                                     kernel_initializer = xavier_initializer(uniform=False))
+            conv42 = batch_norm_layer(conv42, self.training, 'bn42')
+            conv42 = tf.nn.relu(conv42)
+            print('conv42 shape = %s' % conv42.shape)
 
-            fc5 = tf.reshape(conv4, [-1, 256 * 10 * 10])
+            # 10 -> 10
+            conv43 = tf.layers.conv2d(conv42, filters=256, kernel_size=3, strides=1, padding='same',
+                                     kernel_initializer = xavier_initializer(uniform=False))
+            conv43 = batch_norm_layer(conv43, self.training, 'bn43')
+            conv43 = tf.nn.relu(conv43)
+            print('conv43 shape = %s' % conv43.shape)
+
+            fc5 = tf.reshape(conv43, [-1, 256 * 10 * 10])
             print('fc5 input shape = %s' % fc5.shape)
             fc5 = tf.contrib.layers.fully_connected(fc5, 5000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
