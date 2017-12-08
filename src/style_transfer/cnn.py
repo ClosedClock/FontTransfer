@@ -68,7 +68,7 @@ else:
     
 
     # Dataset Parameters
-    batch_size = 100
+    batch_size = 50
     load_size = 160
     fine_size = 160
     target_size = 40
@@ -78,13 +78,13 @@ else:
 
     # Training Parameters
     learning_rate = 0.001
-    dropout = 0.3  ### changed to tf.layers.dropout, probability to drop
+    dropout = 0.1  ### changed to tf.layers.dropout, probability to drop
     training_iters = 10000
     do_training = True
     do_validation = False
     # do_comparison = True
-    on_server = False   ### if set to false, will show pictures
-    step_display = 200
+    on_server = True   ### if set to false, will show pictures
+    step_display = 100
     step_save = 1000
     save_path = '../../saved_train_data/cnn_l1/style_transfer'
     start_from = ''
