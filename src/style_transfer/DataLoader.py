@@ -34,7 +34,10 @@ class TrainValSetLoader(object):
         list_target = np.array(list_target, np.object)
 
         # Permutation. Can be fixed by feeding a seed
-        np.random.seed()
+        if kwargs['user'] == 'zijinshi':
+            np.random.seed()
+        else:
+            np.random.seed(42)
         perm = np.random.permutation(total_size)
         list_original[:] = list_original[perm]
         list_target[:] = list_target[perm]
