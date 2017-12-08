@@ -67,7 +67,7 @@ else:
     do_training = True
     do_validation = False
     # do_comparison = True
-    on_server = False
+    on_server = True
     step_display = 200
     step_save = 1000
     save_path = '../../saved_train_data/cnn_l1/style_transfer'
