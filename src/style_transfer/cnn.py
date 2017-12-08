@@ -10,7 +10,7 @@ from display import show_comparison
 
 # Read username from user.txt. This file will not be synchronized
 with open('../../user.txt') as username_file:
-    user = username_file.readline()
+    user = username_file.readline()[:-1]
 
 print('Current user is ' + user)
 
@@ -21,7 +21,7 @@ if user == 'zijinshi':
     assert train_set_size + val_set_size <= 3498 # Only 3498 in total
 
     # Dataset Parameters
-    batch_size = 20
+    batch_size = 50
     load_size = 160 # size of the images on disk
     fine_size = 160 # size of the images after disposition (flip, translation, ...)
     target_size = 40 # size of output images
@@ -35,11 +35,11 @@ if user == 'zijinshi':
     do_training = True
     do_validation = False
     on_server = True # Save instead of showing results on server
-    step_display = 10 # Interval to test loss on training and validation set, and display(save) comparison
+    step_display = 100 # Interval to test loss on training and validation set, and display(save) comparison
     step_save = 1000
     save_path = '../../saved_train_data/cnn_v2/style_transfer'
-    start_from = ''
-    # start_from = save_path + '-final' # Saved data file
+    #start_from = ''
+    start_from = save_path + '-1000' # Saved data file
 
     variation_loss_scale = 0.0001 * 0 # Scale of variation loss in total loss function
 
@@ -354,8 +354,8 @@ class CharacterTransform:
         with tf.Session(graph=self.graph) as self.session:
             # If a saved file is specified, restore from that file. Otherwise initialize
             if len(start_from) > 1:
-                if not exists(start_from):
-                    raise RuntimeError('File specified by start_from doee not exist')
+                if not exists(start_from + '.meta'):
+                    raise RuntimeError('File %s specified by start_from does not exist' % start_from)
                 self.saver.restore(self.session, start_from)
                 print('Restored from last time: %s' % start_from)
             else:
