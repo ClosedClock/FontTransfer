@@ -13,6 +13,7 @@ user = getpass.getuser()
 print('Current user is ' + user)
 
 print('test')
+
 if user == 'zijinshi':
     # Sizes of training and validation sets
     train_set_size = 3000
