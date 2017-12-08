@@ -133,7 +133,7 @@ class CharacterTransform:
         else:
             self.l2_loss = l2_loss
             self.NN = NN
-            self.build_graph()
+            self.build_graph_best()
 
         self.loader = TrainValSetLoader(**opt_data)
 
