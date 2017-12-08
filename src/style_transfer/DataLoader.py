@@ -35,7 +35,7 @@ class TrainValSetLoader(object):
 
         # Permutation. Can be fixed by feeding a seed
         if kwargs['user'] == 'zijinshi':
-            np.random.seed()
+            np.random.seed(42)
         else:
             np.random.seed(42)
         perm = np.random.permutation(total_size)
