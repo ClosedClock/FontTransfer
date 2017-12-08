@@ -67,7 +67,7 @@ else:
     do_training = True
     do_validation = False
     # do_comparison = True
-    on_server = False
+    on_server = True
     step_display = 200
     step_save = 1000
     save_path = '../../saved_train_data/cnn_l1/style_transfer'
@@ -133,7 +133,7 @@ class CharacterTransform:
         else:
             self.l2_loss = l2_loss
             self.NN = NN
-            self.build_graph()
+            self.build_graph_best()
 
         self.loader = TrainValSetLoader(**opt_data)
 
@@ -223,7 +223,7 @@ class CharacterTransform:
 
         print('Graph building finished')
 
-    def build_graph(self):
+    def build_graph_best(self):
         print('Building graph')
 
         with self.graph.as_default():
@@ -328,13 +328,13 @@ class CharacterTransform:
             self.result = tf.reshape(out, [-1, target_size, target_size, 1])
 
             if self.l2_loss:
-                l2_loss = tf.reduce_sum(tf.losses.mean_squared_error(self.result,self.labels))
+                l2_loss = tf.reduce_mean(tf.losses.mean_squared_error(self.result,self.labels))
                 variation_loss = tf.image.total_variation(self.result)
-                self.loss = tf.reduce_sum(l2_loss + variation_loss * variation_loss_importance)
+                self.loss = tf.reduce_mean(l2_loss + variation_loss * variation_loss_importance)
             else:
                 l1_loss = tf.losses.absolute_difference(self.labels, self.result)  ######  loss function need to be changed to l2
                 variation_loss = tf.image.total_variation(self.result)
-                self.loss = tf.reduce_sum(l1_loss + variation_loss * variation_loss_importance)
+                self.loss = tf.reduce_mean(l1_loss + variation_loss * variation_loss_importance)
 
             update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
             with tf.control_dependencies(update_ops):
