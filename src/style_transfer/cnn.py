@@ -15,8 +15,8 @@ assert train_set_size + val_set_size <= 3498 # Only 3498 in total
 
 # Dataset Parameters
 batch_size = 20
-load_size = 80 # size of the images on disk
-fine_size = 80 # size of the images after disposition (flip, translation, ...)
+load_size = 160 # size of the images on disk
+fine_size = 160 # size of the images after disposition (flip, translation, ...)
 target_size = 40 # size of output images
 original_font = 'Baoli' # transfer style from this font
 target_font = 'Songti' # transfer style to this font
@@ -28,11 +28,11 @@ training_iters = 10000
 do_training = True
 do_validation = False
 on_server = True # Save instead of showing results on server
-step_display = 100 # Interval to test loss on training and validation set, and display(save) comparison
+step_display = 10 # Interval to test loss on training and validation set, and display(save) comparison
 step_save = 1000
-save_path = '../../saved_train_data/cnn_l1/style_transfer'
-# start_from = ''
-start_from = save_path + '-final' # Saved data file
+save_path = '../../saved_train_data/cnn_v2/style_transfer'
+start_from = ''
+# start_from = save_path + '-final' # Saved data file
 
 variation_loss_scale = 0.0001 * 0 # Scale of variation loss in total loss function
 
@@ -108,8 +108,8 @@ class CharacterTransform:
 
             global_step = tf.Variable(0,trainable=False)
 
-            # 80 -> 40 -> 20
-            conv1 = tf.layers.conv2d(self.images, filters=96, kernel_size=11, strides=2, padding='same',
+            # 160 -> 80 -> 40
+            conv1 = tf.layers.conv2d(self.images, filters=16, kernel_size=21, strides=2, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv1 = batch_norm_layer(conv1, self.training, 'bn1')
             conv1 = tf.nn.relu(conv1)
@@ -117,17 +117,17 @@ class CharacterTransform:
             pool1 = tf.layers.max_pooling2d(conv1, pool_size=3, strides=2, padding='same')
             print('pool1 shape = %s' % pool1.shape)
 
-            # 20 -> 10
-            conv2 = tf.layers.conv2d(pool1, filters=256, kernel_size=5, strides=1, padding='same',
+            # 40 -> 20
+            conv2 = tf.layers.conv2d(pool1, filters=64, kernel_size=11, strides=2, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv2 = batch_norm_layer(conv2, self.training, 'bn2')
             conv2 = tf.nn.relu(conv2)
             print('conv2 shape = %s' % conv2.shape)
-            pool2 = tf.layers.max_pooling2d(conv2, pool_size=3, strides=2, padding='same')
-            print('pool2 shape = %s' % pool2.shape)
+            # pool2 = tf.layers.max_pooling2d(conv2, pool_size=3, strides=2, padding='same')
+            # print('pool2 shape = %s' % pool2.shape)
 
-            # 10 -> 10
-            conv3 = tf.layers.conv2d(pool2, filters=384, kernel_size=3, strides=1, padding='same',
+            # 20 -> 10
+            conv3 = tf.layers.conv2d(conv2, filters=256, kernel_size=5, strides=2, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv3 = batch_norm_layer(conv3, self.training, 'bn3')
             conv3 = tf.nn.relu(conv3)
@@ -186,6 +186,8 @@ class CharacterTransform:
         with tf.Session(graph=self.graph) as self.session:
             # If a saved file is specified, restore from that file. Otherwise initialize
             if len(start_from) > 1:
+                if not exists(start_from):
+                    raise RuntimeError('File specified by start_from doee not exist')
                 self.saver.restore(self.session, start_from)
                 print('Restored from last time: %s' % start_from)
             else:
