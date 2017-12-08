@@ -9,14 +9,15 @@ from DataLoader import TrainValSetLoader
 from display import show_comparison
 
 # Read username from user.txt. This file will not be synchronized
-with open('../../user.txt') as username_file:
-    user = username_file.readline()[:-1]
+with open('../../user.txt') as settings_file:
+    user = settings_file.readline()[:-1]
+    computer = settings_file.readlines()[:-1]
 
 print('Current user is ' + user)
 
 if user == 'zijinshi':
     # If is running on server, save instead of showing results on server
-    on_server = True
+    on_server = (computer == 'server')
 
     # Sizes of training and validation sets
     train_set_size = 3000
@@ -24,7 +25,7 @@ if user == 'zijinshi':
     assert train_set_size + val_set_size <= 3498 # Only 3498 in total
 
     # Dataset Parameters
-    batch_size = 50 if on_server else 20
+    batch_size = 50 if on_server else 10
     load_size = 160 # size of the images on disk
     fine_size = 160 # size of the images after disposition (flip, translation, ...)
     target_size = 40 # size of output images
@@ -38,11 +39,11 @@ if user == 'zijinshi':
     do_training = True
     do_validation = False
     # Interval to test loss on training and validation set, and display(save) comparison
-    step_display = 100 if on_server else 10
+    step_display = 100 if on_server else 1
     step_save = 1000
-    save_path = '../../saved_train_data/cnn_v2/style_transfer'
-    #start_from = ''
-    start_from = save_path + '-1000' # Saved data file
+    save_path = '../../saved_train_data/cnn_deep/style_transfer'
+    start_from = ''
+    #start_from = save_path + '-1000' # Saved data file
 
     variation_loss_scale = 0.0001 # Scale of variation loss in total loss function
 
@@ -157,17 +158,24 @@ class CharacterTransform:
 
             global_step = tf.Variable(0,trainable=False)
 
-            # 160 -> 80 -> 40
+            # 160 -> 80
             conv1 = tf.layers.conv2d(self.images, filters=16, kernel_size=21, strides=2, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv1 = batch_norm_layer(conv1, self.training, 'bn1')
             conv1 = tf.nn.relu(conv1)
             print('conv1 shape = %s' % conv1.shape)
-            pool1 = tf.layers.max_pooling2d(conv1, pool_size=3, strides=2, padding='same')
-            print('pool1 shape = %s' % pool1.shape)
+            # pool1 = tf.layers.max_pooling2d(conv1, pool_size=3, strides=2, padding='same')
+            # print('pool1 shape = %s' % pool1.shape)
+
+            # 80 -> 40
+            conv12 = tf.layers.conv2d(conv1, filters=32, kernel_size=15, strides=2, padding='same',
+                                     kernel_initializer = xavier_initializer(uniform=False))
+            conv12 = batch_norm_layer(conv12, self.training, 'bn12')
+            conv12 = tf.nn.relu(conv12)
+            print('conv12 shape = %s' % conv12.shape)
 
             # 40 -> 20
-            conv2 = tf.layers.conv2d(pool1, filters=64, kernel_size=11, strides=2, padding='same',
+            conv2 = tf.layers.conv2d(conv12, filters=64, kernel_size=11, strides=2, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv2 = batch_norm_layer(conv2, self.training, 'bn2')
             conv2 = tf.nn.relu(conv2)
@@ -175,14 +183,14 @@ class CharacterTransform:
             # pool2 = tf.layers.max_pooling2d(conv2, pool_size=3, strides=2, padding='same')
             # print('pool2 shape = %s' % pool2.shape)
 
-            # 20 -> 10
-            conv3 = tf.layers.conv2d(conv2, filters=256, kernel_size=5, strides=2, padding='same',
+            # 20 -> 20
+            conv3 = tf.layers.conv2d(conv2, filters=256, kernel_size=5, strides=1, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv3 = batch_norm_layer(conv3, self.training, 'bn3')
             conv3 = tf.nn.relu(conv3)
             print('conv3 shape = %s' % conv3.shape)
 
-            # 10 -> 10
+            # 20 -> 20
             conv4 = tf.layers.conv2d(conv3, filters=256, kernel_size=3, strides=1, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv4 = batch_norm_layer(conv4, self.training, 'bn4')
@@ -190,16 +198,18 @@ class CharacterTransform:
             print('conv4 shape = %s' % conv4.shape)
 
 
-            fc5 = tf.reshape(conv4, [-1, 256 * 10 * 10])
-            print('fc5 shape = %s' % fc5.shape)
+            fc5 = tf.reshape(conv4, [-1, 256 * 20 * 20])
+            print('fc5 input shape = %s' % fc5.shape)
             fc5 = tf.contrib.layers.fully_connected(fc5, 5000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
             fc5 = batch_norm_layer(fc5, self.training, 'bn5')
             fc5 = tf.nn.dropout(fc5, self.keep_dropout)
+            print('fc5 output shape = %s' % fc5.shape)
 
 
             fc6 = tf.contrib.layers.fully_connected(fc5, 5000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
+            print('fc6 input shape = %s' % fc6.shape)
             fc6 = batch_norm_layer(fc6, self.training, 'bn6')
             fc6 = tf.nn.dropout(fc6, self.keep_dropout)
 
