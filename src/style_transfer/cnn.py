@@ -4,15 +4,15 @@ import datetime
 from tensorflow.contrib.layers.python.layers import xavier_initializer, batch_norm
 from os.path import dirname, exists
 import os
-import getpass
 
 from DataLoader import TrainValSetLoader
 from display import show_comparison
 
-user = getpass.getuser()
-print('Current user is ' + user)
+# Read username from user.txt. This file will not be synchronized
+with open('../../user.txt') as username_file:
+    user = username_file.readline()
 
-print('wefwef')
+print('Current user is ' + user)
 
 if user == 'zijinshi':
     # Sizes of training and validation sets
