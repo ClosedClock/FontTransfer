@@ -11,9 +11,10 @@ from display import show_comparison
 # Read username from user.txt. This file will not be synchronized
 with open('../../user.txt') as settings_file:
     user = settings_file.readline()[:-1]
-    computer = settings_file.readlines()[:-1]
+    computer = settings_file.readline()[:-1]
 
 print('Current user is ' + user)
+print('Running on ' + computer)
 
 if user == 'zijinshi':
     # If is running on server, save instead of showing results on server
@@ -26,6 +27,7 @@ if user == 'zijinshi':
 
     # Dataset Parameters
     batch_size = 50 if on_server else 10
+    print('batch_size = %d' % batch_size)
     load_size = 160 # size of the images on disk
     fine_size = 160 # size of the images after disposition (flip, translation, ...)
     target_size = 40 # size of output images
