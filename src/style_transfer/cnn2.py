@@ -203,7 +203,7 @@ class CharacterTransform:
             self.result = tf.reshape(out, [-1, target_size, target_size, 1])
 
             if self.l2_loss:
-                l2_loss = tf.reduce_sum(tf.losses.mean_squared_error(out, tf.reshape(self.labels, [-1, fine_size * fine_size])))
+                l2_loss = tf.reduce_sum(tf.losses.mean_squared_error(self.result,self.labels))
                 variation_loss = tf.image.total_variation(self.result)
                 self.loss = tf.reduce_sum(l2_loss + variation_loss * variation_loss_importance)
             else: 
