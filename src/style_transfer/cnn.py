@@ -364,38 +364,38 @@ class CharacterTransform:
                     conv3_3 = tf.layers.batch_normalization(inputs=conv3_3, axis=3,training = self.training)
                 print('conv3_3 shape = %s' % conv3_3.shape)
 
-                conv4_1 = tf.layers.conv2d(inputs=conv3_3, filters=512, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu,kernel_initializer = xavier_initializer(uniform=False))
+                conv4_1 = tf.layers.conv2d(inputs=conv3_3, filters=256, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu,kernel_initializer = xavier_initializer(uniform=False))
                 if pool8:
                     conv4_1 = tf.layers.max_pooling2d(inputs=conv4_1, pool_size=2, strides=2)
                 if BN: 
                     conv4_1 = tf.layers.batch_normalization(inputs=conv4_1, axis=3,training = self.training)
 
-                conv4_2 = tf.layers.conv2d(inputs=conv4_1, filters=512, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu,kernel_initializer = xavier_initializer(uniform=False))
+                conv4_2 = tf.layers.conv2d(inputs=conv4_1, filters=256, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu,kernel_initializer = xavier_initializer(uniform=False))
                 if pool9:
                     conv4_2 = tf.layers.max_pooling2d(inputs=conv4_2, pool_size=2, strides=2)
                 if BN: 
                     conv4_2 = tf.layers.batch_normalization(inputs=conv4_2, axis=3,training = self.training)
                 
-                conv4_3 = tf.layers.conv2d(inputs=conv4_2, filters=512, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu,kernel_initializer = xavier_initializer(uniform=False))
+                conv4_3 = tf.layers.conv2d(inputs=conv4_2, filters=256, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu,kernel_initializer = xavier_initializer(uniform=False))
                 if pool10:
                     conv4_3 = tf.layers.max_pooling2d(inputs=conv4_3, pool_size=2, strides=2)
                 if BN: 
                     conv4_3 = tf.layers.batch_normalization(inputs=conv4_3, axis=3,training = self.training)
                 print('conv4_3 shape = %s' % conv4_3.shape)
 
-                conv5_1 = tf.layers.conv2d(inputs=conv4_3, filters=512, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu,kernel_initializer = xavier_initializer(uniform=False))
+                conv5_1 = tf.layers.conv2d(inputs=conv4_3, filters=256, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu,kernel_initializer = xavier_initializer(uniform=False))
                 if pool11:
                     conv5_1 = tf.layers.max_pooling2d(inputs=conv5_1, pool_size=2, strides=2)
                 if BN: 
                     conv5_1 = tf.layers.batch_normalization(inputs=conv5_1, axis=3,training = self.training)
 
-                conv5_2 = tf.layers.conv2d(inputs=conv5_1, filters=512, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu,kernel_initializer = xavier_initializer(uniform=False))
+                conv5_2 = tf.layers.conv2d(inputs=conv5_1, filters=256, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu,kernel_initializer = xavier_initializer(uniform=False))
                 if pool12:
                     conv5_2 = tf.layers.max_pooling2d(inputs=conv5_2, pool_size=2, strides=2)
                 if BN: 
                     conv5_2 = tf.layers.batch_normalization(inputs=conv5_2, axis=3,training = self.training)
                 
-                conv5_3 = tf.layers.conv2d(inputs=conv5_2, filters=512, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu,kernel_initializer = xavier_initializer(uniform=False))
+                conv5_3 = tf.layers.conv2d(inputs=conv5_2, filters=256, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu,kernel_initializer = xavier_initializer(uniform=False))
                 if pool13:
                     conv5_3 = tf.layers.max_pooling2d(inputs=conv5_3, pool_size=2, strides=2)
                 if BN: 
