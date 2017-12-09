@@ -56,18 +56,18 @@ else:
 
     # Graph selection
     NN = False  ## True means we use only fully connected layer
-    l2_loss = True  ## True means we use l2_loss function   
-    BN = False     #### batch normalisation for neural network training 
+    l2_loss = False  ## True means we use l2_loss function   
+    BN = True     #### batch normalisation for neural network training 
     pool1 = False    ## whether to pool for layer n
-    pool2 = True    ## set the second layer to be true
+    pool2 = False    ## set the second layer to be true
     pool3 = False  
-    pool4 = True 
+    pool4 = False 
     pool5 = False 
     pool6 = False 
-    pool7 = True
+    pool7 = False
     pool8 = False
     pool9 = False
-    pool10 = True 
+    pool10 = False 
     pool11 = False
     pool12 = False
     pool13 = True   ## set the final layer to do max pool
@@ -84,19 +84,19 @@ else:
 
     # Training Parameters
     learning_rate = 0.001
-    dropout = 0.1  ### changed to tf.layers.dropout, probability to drop
+    dropout = 0.2  ### changed to tf.layers.dropout, probability to drop
     training_iters = 10000
     do_training = True
     do_validation = False
     # do_comparison = True
     on_server = True   ### if set to false, will show pictures
     step_display = 200
-    step_save = 1000
+    step_save = 2000
     save_path = '../../saved_train_data/cnn_l1/style_transfer_mike'
-    start_from = '../../saved_train_data/cnn_l1/style_transfer' + '-2000'
+    start_from = ''
     # start_from = save_path + '-final'
 
-    variation_loss_importance = 0.0001 * 0
+    variation_loss_importance = 0.25
 
 # mean values of images for each font (currently not in use)
 mean_map = {
@@ -319,81 +319,81 @@ class CharacterTransform:
                 train_out = tf.nn.dropout(fc7, self.keep_dropout)
 
             else:
-                conv1_1 = tf.layers.conv2d(inputs=self.images, filters=64, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
+                conv1_1 = tf.layers.conv2d(inputs=self.images, filters=8, kernel_size=64, strides=2, padding="same", activation=tf.nn.relu)
                 if pool1:
                     conv1_1 = tf.layers.max_pooling2d(inputs=conv1_1, pool_size=2, strides=2)
                 if BN: 
                     conv1_1 = tf.layers.batch_normalization(inputs=conv1_1, axis=3)
-                print('conv1 shape = %s' % conv1_1.shape)
+                print('conv1_1 shape = %s' % conv1_1.shape)
 
-                conv1_2 = tf.layers.conv2d(inputs=conv1_1, filters=64, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
+                conv1_2 = tf.layers.conv2d(inputs=conv1_1, filters=8, kernel_size=64, strides=1, padding="same", activation=tf.nn.relu)
                 if pool2:
                     conv1_2 = tf.layers.max_pooling2d(inputs=conv1_2, pool_size=2, strides=2)
                 if BN: 
                     conv1_2 = tf.layers.batch_normalization(inputs=conv1_2, axis=3)
-                print('conv2 shape = %s' % conv1_2.shape)
+                print('conv1_2 shape = %s' % conv1_2.shape)
 
-                conv2_1 = tf.layers.conv2d(inputs=conv1_2, filters=128, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
+                conv2_1 = tf.layers.conv2d(inputs=conv1_2, filters=32, kernel_size=32, strides=1, padding="same", activation=tf.nn.relu)
                 if pool3:
                     conv2_1 = tf.layers.max_pooling2d(inputs=conv2_1, pool_size=2, strides=2)
                 if BN: 
                     conv2_1 = tf.layers.batch_normalization(inputs=conv2_1, axis=3)
 
-                conv2_2 = tf.layers.conv2d(inputs=conv2_1, filters=128, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
+                conv2_2 = tf.layers.conv2d(inputs=conv2_1, filters=32, kernel_size=32, strides=2, padding="same", activation=tf.nn.relu)
                 if pool4:
                     conv2_2 = tf.layers.max_pooling2d(inputs=conv2_2, pool_size=2, strides=2)
                 if BN: 
                     conv2_2 = tf.layers.batch_normalization(inputs=conv2_2, axis=3)
                 print('conv2_2 shape = %s' % conv2_2.shape)
-                conv3_1 = tf.layers.conv2d(inputs=conv2_2, filters=256, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
+                conv3_1 = tf.layers.conv2d(inputs=conv2_2, filters=64, kernel_size=16, strides=1, padding="same", activation=tf.nn.relu)
                 if pool5:
                     conv3_1 = tf.layers.max_pooling2d(inputs=conv3_1, pool_size=2, strides=2)
                 if BN: 
                     conv3_1 = tf.layers.batch_normalization(inputs=conv3_1, axis=3)
                 
-                conv3_2 = tf.layers.conv2d(inputs=conv3_1, filters=256, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
+                conv3_2 = tf.layers.conv2d(inputs=conv3_1, filters=64, kernel_size=16, strides=2, padding="same", activation=tf.nn.relu)
                 if pool6:
                     conv3_2 = tf.layers.max_pooling2d(inputs=conv3_2, pool_size=2, strides=2)
                 if BN: 
                     conv3_2 = tf.layers.batch_normalization(inputs=conv3_2, axis=3)
                 
-                conv3_3 = tf.layers.conv2d(inputs=conv3_2, filters=256, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
+                conv3_3 = tf.layers.conv2d(inputs=conv3_2, filters=64, kernel_size=16, strides=1, padding="same", activation=tf.nn.relu)
                 if pool7:
                     conv3_3 = tf.layers.max_pooling2d(inputs=conv3_3, pool_size=2, strides=2)
                 if BN: 
                     conv3_3 = tf.layers.batch_normalization(inputs=conv3_3, axis=3)
                 print('conv3_3 shape = %s' % conv3_3.shape)
-                conv4_1 = tf.layers.conv2d(inputs=conv3_3, filters=512, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
+                conv4_1 = tf.layers.conv2d(inputs=conv3_3, filters=128, kernel_size=7, strides=1, padding="same", activation=tf.nn.relu)
                 if pool8:
                     conv4_1 = tf.layers.max_pooling2d(inputs=conv4_1, pool_size=2, strides=2)
                 if BN: 
                     conv4_1 = tf.layers.batch_normalization(inputs=conv4_1, axis=3)
 
-                conv4_2 = tf.layers.conv2d(inputs=conv4_1, filters=512, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
+                conv4_2 = tf.layers.conv2d(inputs=conv4_1, filters=128, kernel_size=7, strides=2, padding="same", activation=tf.nn.relu)
                 if pool9:
                     conv4_2 = tf.layers.max_pooling2d(inputs=conv4_2, pool_size=2, strides=2)
                 if BN: 
                     conv4_2 = tf.layers.batch_normalization(inputs=conv4_2, axis=3)
                 
-                conv4_3 = tf.layers.conv2d(inputs=conv4_2, filters=512, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
+                conv4_3 = tf.layers.conv2d(inputs=conv4_2, filters=128, kernel_size=7, strides=1, padding="same", activation=tf.nn.relu)
                 if pool10:
                     conv4_3 = tf.layers.max_pooling2d(inputs=conv4_3, pool_size=2, strides=2)
                 if BN: 
                     conv4_3 = tf.layers.batch_normalization(inputs=conv4_3, axis=3)
                 print('conv4_3 shape = %s' % conv4_3.shape)
-                conv5_1 = tf.layers.conv2d(inputs=conv4_3, filters=512, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
+                conv5_1 = tf.layers.conv2d(inputs=conv4_3, filters=128, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
                 if pool11:
                     conv5_1 = tf.layers.max_pooling2d(inputs=conv5_1, pool_size=2, strides=2)
                 if BN: 
                     conv5_1 = tf.layers.batch_normalization(inputs=conv5_1, axis=3)
 
-                conv5_2 = tf.layers.conv2d(inputs=conv5_1, filters=512, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
+                conv5_2 = tf.layers.conv2d(inputs=conv5_1, filters=128, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
                 if pool12:
                     conv5_2 = tf.layers.max_pooling2d(inputs=conv5_2, pool_size=2, strides=2)
                 if BN: 
                     conv5_2 = tf.layers.batch_normalization(inputs=conv5_2, axis=3)
                 
-                conv5_3 = tf.layers.conv2d(inputs=conv5_2, filters=512, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
+                conv5_3 = tf.layers.conv2d(inputs=conv5_2, filters=128, kernel_size=3, strides=1, padding="same", activation=tf.nn.relu)
                 if pool13:
                     conv5_3 = tf.layers.max_pooling2d(inputs=conv5_3, pool_size=2, strides=2)
                 if BN: 
@@ -554,5 +554,6 @@ class CharacterTransform:
 
 
 if __name__ == '__main__':
+    #a = CharacterTransform()
     with CharacterTransform() as conv_net:
         conv_net.run()
