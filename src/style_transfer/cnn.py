@@ -57,7 +57,7 @@ else:
     # Graph selection
     NN = False  ## True means we use only fully connected layer
     l2_loss = False  ## True means we use l2_loss function   
-    BN = True     #### batch normalisation for neural network training 
+    BN = False     #### batch normalisation for neural network training 
     pool1 = False    ## whether to pool for layer n
     pool2 = False    ## set the second layer to be true
     pool3 = False  
@@ -90,13 +90,13 @@ else:
     do_validation = False
     # do_comparison = True
     on_server = True   ### if set to false, will show pictures
-    step_display = 200
+    step_display = 100
     step_save = 2000
     save_path = '../../saved_train_data/cnn_l1/style_transfer_mike'
-    start_from = save_path +'-2000'
-    # start_from = save_path + '-final'
+    start_from = ''
+    #start_from = save_path + '-final'
 
-    variation_loss_importance = 0.25
+    variation_loss_importance = 0
 
 # mean values of images for each font (currently not in use)
 mean_map = {
