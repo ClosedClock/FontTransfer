@@ -96,7 +96,7 @@ else:
     start_from = ''
     #start_from = save_path + '-final'
 
-    variation_loss_importance = 0.25
+    variation_loss_importance = 0
 
 # mean values of images for each font (currently not in use)
 mean_map = {
