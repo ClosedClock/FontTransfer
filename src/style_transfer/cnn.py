@@ -74,7 +74,7 @@ else:
     
 
     # Dataset Parameters
-    batch_size = 50
+    batch_size = 100
     load_size = 160
     fine_size = 160
     target_size = 40
@@ -90,10 +90,10 @@ else:
     do_validation = False
     # do_comparison = True
     on_server = True   ### if set to false, will show pictures
-    step_display = 100
+    step_display = 200
     step_save = 1000
-    save_path = '../../saved_train_data/cnn_l1/style_transfer'
-    start_from = ''
+    save_path = '../../saved_train_data/cnn_l1/style_transfer_mike'
+    start_from = '../../saved_train_data/cnn_l1/style_transfer' + '-2000'
     # start_from = save_path + '-final'
 
     variation_loss_importance = 0.0001 * 0
