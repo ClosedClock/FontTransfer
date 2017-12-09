@@ -57,7 +57,7 @@ else:
     # Graph selection
     NN = False  ## True means we use only fully connected layer
     l2_loss = True  ## True means we use l2_loss function   
-    BN = True     #### batch normalisation for neural network training 
+    BN = False     #### batch normalisation for neural network training 
     pool1 = False    ## whether to pool for layer n
     pool2 = False    ## set the second layer to be true
     pool3 = False  
