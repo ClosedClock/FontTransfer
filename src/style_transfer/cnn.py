@@ -74,7 +74,7 @@ else:
     
 
     # Dataset Parameters
-    batch_size = 100
+    batch_size = 50
     load_size = 160
     fine_size = 160
     target_size = 40
