@@ -93,7 +93,7 @@ else:
     step_display = 200
     step_save = 2000
     save_path = '../../saved_train_data/cnn_l1/style_transfer_mike'
-    start_from = ''
+    start_from = save_path +'-2000'
     # start_from = save_path + '-final'
 
     variation_loss_importance = 0.25
