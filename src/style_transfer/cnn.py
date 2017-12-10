@@ -89,7 +89,7 @@ else:
     do_validation = False
     # do_comparison = True
     on_server = True   ### if set to false, will show pictures
-    step_display = 50
+    step_display = 100
     step_save = 2000
     save_path = '../../saved_train_data/cnn_l1/style_transfer_mike'
     start_from = save_path + '-4000'
