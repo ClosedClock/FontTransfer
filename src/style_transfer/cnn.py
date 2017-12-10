@@ -83,7 +83,7 @@ else:
 
     # Training Parameters
     learning_rate = 0.001
-    dropout = 0.5  ### changed to tf.layers.dropout, probability to drop
+    dropout = 0.1  ### changed to tf.layers.dropout, probability to drop
     training_iters = 10000
     do_training = True
     do_validation = False
