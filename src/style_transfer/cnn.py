@@ -55,22 +55,22 @@ else:
     assert train_set_size + val_set_size <= 3498
 
     # Graph selection
-    NN = True  ## True means we use only fully connected layer
+    NN = False  ## True means we use only fully connected layer
     l2_loss = True  ## True means we use l2_loss function   
     BN = False     #### batch normalisation for neural network training 
-    pool1 = True    ## whether to pool for layer n
-    pool2 = False    ## set the second layer to be true
-    pool3 = True 
-    pool4 = False 
-    pool5 = True
+    pool1 = False    ## whether to pool for layer n
+    pool2 = True    ## set the second layer to be true
+    pool3 = False  
+    pool4 = True 
+    pool5 = False 
     pool6 = False 
-    pool7 = False
-    pool8 = True
+    pool7 = True
+    pool8 = False
     pool9 = False
-    pool10 = False 
-    pool11 = True
+    pool10 = True 
+    pool11 = False
     pool12 = False
-    pool13 = True   ## set the final layer to do max pool
+    pool13 = True   # ## set the final layer to do max pool
     
 
     # Dataset Parameters
