@@ -95,7 +95,7 @@ else:
     start_from = save_path + '-4000'
     #start_from = save_path + '-final'
 
-    variation_loss_importance = 0.25
+    variation_loss_importance = 0.0025
 
 # mean values of images for each font (currently not in use)
 mean_map = {
