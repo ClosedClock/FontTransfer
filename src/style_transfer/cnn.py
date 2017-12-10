@@ -281,38 +281,38 @@ class CharacterTransform:
             # 80 -> 40 -> 20
             if self.NN:
 
-                fc1 = tf.contrib.layers.fully_connected(tf.reshape(self.images, [-1, fine_size * fine_size]), 5000, tf.nn.relu,
+                fc1 = tf.contrib.layers.fully_connected(tf.reshape(self.images, [-1, fine_size * fine_size]), 3000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
                 fc1 = batch_norm_layer(fc1, self.training, 'bn1')
                 fc1 = tf.nn.dropout(fc1, self.keep_dropout)
 
 
-                fc2 = tf.contrib.layers.fully_connected(fc1, 5000, tf.nn.relu,
+                fc2 = tf.contrib.layers.fully_connected(fc1, 3000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
                 fc2 = batch_norm_layer(fc2, self.training, 'bn2')
                 fc2 = tf.nn.dropout(fc2, self.keep_dropout)
 
-                fc3 = tf.contrib.layers.fully_connected(fc2, 5000, tf.nn.relu,
+                fc3 = tf.contrib.layers.fully_connected(fc2, 3000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
                 fc3 = batch_norm_layer(fc3, self.training, 'bn3')
                 fc3 = tf.nn.dropout(fc3, self.keep_dropout)
 
-                fc4 = tf.contrib.layers.fully_connected(fc3, 5000, tf.nn.relu,
+                fc4 = tf.contrib.layers.fully_connected(fc3, 3000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
                 fc4 = batch_norm_layer(fc4, self.training, 'bn4')
                 fc4 = tf.nn.dropout(fc4, self.keep_dropout)
 
-                fc5 = tf.contrib.layers.fully_connected(fc4, 5000, tf.nn.relu,
+                fc5 = tf.contrib.layers.fully_connected(fc4, 3000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
                 fc5 = batch_norm_layer(fc5, self.training, 'bn5')
                 fc5 = tf.nn.dropout(fc5, self.keep_dropout)
 
-                fc6 = tf.contrib.layers.fully_connected(fc5, 5000, tf.nn.relu,
+                fc6 = tf.contrib.layers.fully_connected(fc5, 3000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
                 fc6 = batch_norm_layer(fc6, self.training, 'bn6')
                 fc6 = tf.nn.dropout(fc6, self.keep_dropout)
 
-                fc7 = tf.contrib.layers.fully_connected(fc6, 5000, tf.nn.relu,
+                fc7 = tf.contrib.layers.fully_connected(fc6, 3000, tf.nn.relu,
                                                     weights_initializer=xavier_initializer(uniform=False))
                 fc7 = batch_norm_layer(fc7, self.training, 'bn7')
                 train_out = tf.nn.dropout(fc7, self.keep_dropout)
