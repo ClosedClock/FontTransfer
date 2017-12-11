@@ -32,7 +32,7 @@ if user == 'zijinshi':
     fine_size = 160 # size of the images after disposition (flip, translation, ...)
     target_size = 40 # size of output images
     original_font = 'Baoli' # transfer style from this font
-    target_font = 'simkai' # transfer style to this font
+    target_font = 'STHeiti' # transfer style to this font
 
     # Training Parameters
     learning_rate = 0.001 # Initial learning rate for Adam optimizer
