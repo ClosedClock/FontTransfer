@@ -47,7 +47,7 @@ if user == 'zijinshi':
     #start_from = ''
     start_from = save_path + '-4000' # Saved data file
 
-    variation_loss_scale = 0.000025 # Scale of variation loss in total loss function
+    variation_loss_scale = 0.0001 # Scale of variation loss in total loss function
 
 else:
     train_set_size = 3400
