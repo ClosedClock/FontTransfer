@@ -44,8 +44,8 @@ if user == 'zijinshi':
     step_display = 100 #if on_server else 1                                                   ######edited by Mike
     step_save = 2000
     save_path = '../../saved_train_data/cnn_deep/style_transfer_zijin'                        ######edited by Mike
-    #start_from = ''
-    start_from = save_path + '-4000' # Saved data file
+    start_from = ''
+    #start_from = save_path + '-4000' # Saved data file
 
     variation_loss_scale = 0.0001 # Scale of variation loss in total loss function
 
