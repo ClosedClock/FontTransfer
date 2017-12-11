@@ -26,7 +26,7 @@ if user == 'zijinshi':
     assert train_set_size + val_set_size <= 3498 # Only 3498 in total
 
     # Dataset Parameters
-    batch_size = 20 #if on_server else 10                                                ######edited by Mike
+    batch_size = 50 #if on_server else 10                                                ######edited by Mike
     print('batch_size = %d' % batch_size)
     load_size = 160 # size of the images on disk
     fine_size = 160 # size of the images after disposition (flip, translation, ...)
@@ -176,7 +176,7 @@ class CharacterTransform:
             global_step = tf.Variable(0,trainable=False)
 
             # 160 -> 80
-            conv1 = tf.layers.conv2d(self.images, filters=64, kernel_size=3, strides=1, padding='same',
+            conv1 = tf.layers.conv2d(self.images, filters=64, kernel_size=21, strides=2, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv1 = batch_norm_layer(conv1, self.training, 'bn1')
             conv1 = tf.nn.relu(conv1)
@@ -201,7 +201,7 @@ class CharacterTransform:
             # print('pool2 shape = %s' % pool2.shape)
 
             # 20 -> 10
-            conv3 = tf.layers.conv2d(conv2, filters=256, kernel_size=21, strides=2, padding='same',
+            conv3 = tf.layers.conv2d(conv2, filters=256, kernel_size=3, strides=1, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv3 = batch_norm_layer(conv3, self.training, 'bn3')
             conv3 = tf.nn.relu(conv3)
