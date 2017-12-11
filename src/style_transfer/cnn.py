@@ -176,7 +176,7 @@ class CharacterTransform:
             global_step = tf.Variable(0,trainable=False)
 
             # 160 -> 80
-            conv1 = tf.layers.conv2d(self.images, filters=128, kernel_size=3, strides=1, padding='same',
+            conv1 = tf.layers.conv2d(self.images, filters=64, kernel_size=3, strides=1, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv1 = batch_norm_layer(conv1, self.training, 'bn1')
             conv1 = tf.nn.relu(conv1)
