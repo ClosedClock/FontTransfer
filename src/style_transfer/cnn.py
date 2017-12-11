@@ -18,7 +18,7 @@ print('Running on ' + computer)
 
 if user == 'zijinshi':
     # If is running on server, save instead of showing results on server
-    on_server = (computer == 'server')
+    on_server = False  #(computer == 'server')                                          ######edited by Mike
 
     # Sizes of training and validation sets
     train_set_size = 3000
@@ -26,7 +26,7 @@ if user == 'zijinshi':
     assert train_set_size + val_set_size <= 3498 # Only 3498 in total
 
     # Dataset Parameters
-    batch_size = 50 if on_server else 10
+    batch_size = 50 #if on_server else 10                                                ######edited by Mike
     print('batch_size = %d' % batch_size)
     load_size = 160 # size of the images on disk
     fine_size = 160 # size of the images after disposition (flip, translation, ...)
@@ -41,9 +41,9 @@ if user == 'zijinshi':
     do_training = True
     do_validation = False
     # Interval to test loss on training and validation set, and display(save) comparison
-    step_display = 100 if on_server else 1
+    step_display = 100 #if on_server else 1                                                   ######edited by Mike
     step_save = 2000
-    save_path = '../../saved_train_data/cnn_deep/style_transfer_zijin'
+    save_path = '../../saved_train_data/cnn_deep/style_transfer_zijin'                        ######edited by Mike
     start_from = ''
     #start_from = save_path + '-1000' # Saved data file
 
@@ -208,7 +208,7 @@ class CharacterTransform:
             print('conv3 shape = %s' % conv3.shape)
 
             # 10 -> 10
-            conv4 = tf.layers.conv2d(conv3, filters=256, kernel_size=3, strides=1, padding='same',
+            conv4 = tf.layers.conv2d(conv3, filters=256, kernel_size=5, strides=2, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv4 = batch_norm_layer(conv4, self.training, 'bn4')
             conv4 = tf.nn.relu(conv4)
