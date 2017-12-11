@@ -32,7 +32,7 @@ if user == 'zijinshi':
     fine_size = 160 # size of the images after disposition (flip, translation, ...)
     target_size = 40 # size of output images
     original_font = 'Baoli' # transfer style from this font
-    target_font = 'Hannotate' # transfer style to this font
+    target_font = 'Hanzipen' # transfer style to this font
 
     # Training Parameters
     learning_rate = 0.001 # Initial learning rate for Adam optimizer
@@ -44,8 +44,8 @@ if user == 'zijinshi':
     step_display = 100 #if on_server else 1                                                   ######edited by Mike
     step_save = 2000
     save_path = '../../saved_train_data/cnn_deep/style_transfer_zijin'                        ######edited by Mike
-    #start_from = ''
-    start_from = save_path + '-2000' # Saved data file
+    start_from = ''
+    #start_from = save_path + '-2000' # Saved data file
 
     variation_loss_scale = 0.0001 # Scale of variation loss in total loss function
 
