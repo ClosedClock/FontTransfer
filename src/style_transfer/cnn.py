@@ -26,7 +26,7 @@ if user == 'zijinshi':
     assert train_set_size + val_set_size <= 3498 # Only 3498 in total
 
     # Dataset Parameters
-    batch_size = 50 #if on_server else 10                                                ######edited by Mike
+    batch_size = 20 #if on_server else 10                                                ######edited by Mike
     print('batch_size = %d' % batch_size)
     load_size = 160 # size of the images on disk
     fine_size = 160 # size of the images after disposition (flip, translation, ...)
