@@ -44,8 +44,8 @@ if user == 'zijinshi':
     step_display = 100 #if on_server else 1                                                   ######edited by Mike
     step_save = 2000
     save_path = '../../saved_train_data/cnn_deep/style_transfer_zijin'                        ######edited by Mike
-    #start_from = ''
-    start_from = save_path + '-4000' # Saved data file
+    start_from = ''
+    #start_from = save_path + '-2000' # Saved data file
 
     variation_loss_scale = 0.0001 # Scale of variation loss in total loss function
 
@@ -176,7 +176,7 @@ class CharacterTransform:
             global_step = tf.Variable(0,trainable=False)
 
             # 160 -> 80
-            conv1 = tf.layers.conv2d(self.images, filters=16, kernel_size=3, strides=1, padding='same',
+            conv1 = tf.layers.conv2d(self.images, filters=16, kernel_size=21, strides=2, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv1 = batch_norm_layer(conv1, self.training, 'bn1')
             conv1 = tf.nn.relu(conv1)
