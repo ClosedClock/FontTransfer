@@ -201,7 +201,7 @@ class CharacterTransform:
             # print('pool2 shape = %s' % pool2.shape)
 
             # 20 -> 10
-            conv3 = tf.layers.conv2d(conv2, filters=256, kernel_size=3, strides=1, padding='same',
+            conv3 = tf.layers.conv2d(conv2, filters=256, kernel_size=21, strides=2, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv3 = batch_norm_layer(conv3, self.training, 'bn3')
             conv3 = tf.nn.relu(conv3)
