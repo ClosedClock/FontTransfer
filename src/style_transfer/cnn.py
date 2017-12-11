@@ -42,8 +42,8 @@ if user == 'zijinshi':
     do_validation = False
     # Interval to test loss on training and validation set, and display(save) comparison
     step_display = 100 if on_server else 1
-    step_save = 1000
-    save_path = '../../saved_train_data/cnn_deep/style_transfer'
+    step_save = 2000
+    save_path = '../../saved_train_data/cnn_deep/style_transfer_zijin'
     start_from = ''
     #start_from = save_path + '-1000' # Saved data file
 
@@ -181,18 +181,18 @@ class CharacterTransform:
             conv1 = batch_norm_layer(conv1, self.training, 'bn1')
             conv1 = tf.nn.relu(conv1)
             print('conv1 shape = %s' % conv1.shape)
-            # pool1 = tf.layers.max_pooling2d(conv1, pool_size=3, strides=2, padding='same')
-            # print('pool1 shape = %s' % pool1.shape)
+            pool1 = tf.layers.max_pooling2d(conv1, pool_size=3, strides=2, padding='same')
+            print('pool1 shape = %s' % pool1.shape)
 
             # 80 -> 40
-            conv12 = tf.layers.conv2d(conv1, filters=32, kernel_size=15, strides=2, padding='same',
+            conv12 = tf.layers.conv2d(conv1, filters=64, kernel_size=11, strides=2, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv12 = batch_norm_layer(conv12, self.training, 'bn12')
             conv12 = tf.nn.relu(conv12)
             print('conv12 shape = %s' % conv12.shape)
 
             # 40 -> 20
-            conv2 = tf.layers.conv2d(conv12, filters=64, kernel_size=11, strides=2, padding='same',
+            conv2 = tf.layers.conv2d(conv12, filters=256, kernel_size=5, strides=2, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv2 = batch_norm_layer(conv2, self.training, 'bn2')
             conv2 = tf.nn.relu(conv2)
@@ -201,7 +201,7 @@ class CharacterTransform:
             # print('pool2 shape = %s' % pool2.shape)
 
             # 20 -> 10
-            conv3 = tf.layers.conv2d(conv2, filters=256, kernel_size=5, strides=2, padding='same',
+            conv3 = tf.layers.conv2d(conv2, filters=256, kernel_size=3, strides=1, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv3 = batch_norm_layer(conv3, self.training, 'bn3')
             conv3 = tf.nn.relu(conv3)
