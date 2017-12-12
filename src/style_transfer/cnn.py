@@ -201,14 +201,14 @@ class CharacterTransform:
             # print('pool2 shape = %s' % pool2.shape)
 
             # 20 -> 10
-            conv3 = tf.layers.conv2d(conv2, filters=256, kernel_size=3, strides=1, padding='same',
+            conv3 = tf.layers.conv2d(conv2, filters=256, kernel_size=5, strides=2, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv3 = batch_norm_layer(conv3, self.training, 'bn3')
             conv3 = tf.nn.relu(conv3)
             print('conv3 shape = %s' % conv3.shape)
 
             # 10 -> 10
-            conv4 = tf.layers.conv2d(conv3, filters=256, kernel_size=5, strides=2, padding='same',
+            conv4 = tf.layers.conv2d(conv3, filters=256, kernel_size=3, strides=1, padding='same',
                                      kernel_initializer = xavier_initializer(uniform=False))
             conv4 = batch_norm_layer(conv4, self.training, 'bn4')
             conv4 = tf.nn.relu(conv4)
