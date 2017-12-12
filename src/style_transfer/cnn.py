@@ -79,7 +79,7 @@ else:
     fine_size = 160
     target_size = 40
     original_font = 'Baoli'
-    target_font = 'Songti'
+    target_font = 'Hannotate'
 
     # Training Parameters
     learning_rate = 0.001
